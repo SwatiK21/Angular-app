@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
+        <link rel="stylesheet" type="text/css" href="css/custom.css">
+    </head>
+    <body ng-controller="MainCtr" ng-cloak>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-3 col-md-2 sidebar">
+                    <a href="#" ng-click="setCurrentCategory(null)"><img class="logo" src="images/logo.jpg"></a>
+                    <ul class="nav nav-sidebar">
+                        <li ng-repeat="category in categories" ng-class="{'active':isCurrentCategory(category)}">
+                            <a href="#" ng-click="setCurrentCategory(category)">{{category.name}}</a>
+                        </li>
+                        <!--
+                        <li><a href="#">Category</a></li>
+                        <li><a href="#">Category</a></li>
+                        -->
+                    </ul>
+                </div>
+                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                    <!--
+                    <h1>{{hello}}</h1>    // To check if it's working after adding controller
+
+                    //initial check to run Angular
+                    <div <ng-init="hello='world'">
+                        <h1>{{hello}}</h1>
+                        <input type="text" ng-model="hello"-->
+                    <div ng-class="{active: isSelectedBookmark(bookmark.id)}" ng-repeat="bookmark in bookmarks | filter:{category:currentCategory.name}">
+                        <button type="button" class="close">&times;</button>
+                        <button type="button" ng-click="setEditedBookmark(bookmark);startEditing();" class="btn btn-link"><span class="glyphicon glyphicon-pencil"></span></button>
+                        <a href="{{bookmark.url}}" target="_blank">{{bookmark.title}}</a>
+                    </div>
+                    <!--
+                    <div>
+                        <button type="button" class="close">&times;</button>
+                        <button type="button" class="btn btn-link"><span class="glyphicon glyphicon-pencil"></span></button>
+                        <a href="#" target="_blank">Bookmark</a>
+                    </div>
+                    <div>
+                        <button type="button" class="close">&times;</button>
+                        <button type="button" class="btn btn-link"><span class="glyphicon glyphicon-pencil"></span></button>
+                        <a href="#" target="_blank">Bookmark</a>
+                    </div>
+                    -->
+                    <hr/>
+
+                    <!-- Creating-->
+                    <div ng-if="showCreating()">
+                        <button type = "button" class="btn btn-link" ng-click="startCreating()">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            Create Bookmark
+                        </button>
+
+                        <form class="create-form" ng-show="isCreating" role="form" ng-submit="createBookmark(newBookmark)" novalidate>
+                            <div class="form-group">
+                                <label for="newBookmarkTitle">Bookmark Title</label>
+                                <input type="text" class="form-control" id="newBookmarkTitle" ng-model="newBookmark.title" placeholder="Enter title">
+                            </div>
+                            <div class="form-group">
+                                <label for="newBookmarkURL">Bookmark URL</label>
+                                <input type="text" class="form-control" id="newBookmarkURL" ng-model="newBookmark.url" placeholder="Enter URL">
+                            </div>
+                            <button type="submit" class="btn btn-success btn-md">Create</button>
+                            <button type="button" class="btn btn-default btn-danger btn-md pull-right" ng-click="cancelCreating()">Cancel</button>
+                        </form>
+                    
+                    </div>
+
+
+                    <!--- Trying to create a bookmark with form 
+                    <div ng-if="isCreating">
+                        Create Bookmark !
+                        <button type="button" class="btn btn-default btn-md pull-right" ng-click="cancelCreating()">Cancel</button>
+                    </div>
+
+                    <form class="create-form" ng-show="isCreating" role="form" ng-submit="createBookmark(newBookmark)" novalidate>
+                        <div class="form-group">
+                            <label for="newBookmarkTitle">Bookmark title</label>
+                            <input type="text" class="form-control" id="newBookmarkTitle" ng-model="newBookmark.title" placeholder="Enter title">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newBookmarkURL">Bookmark URL</label>
+                            <input type="text" class="form-control" id="newBookmarkURL" ng-model="newBookmark.url" placeholder="Enter URL">
+                        </div>
+
+                        <button type="submit" class="btn btn-info btn-md">Create</button>
+                        <button type="button" class="btn btn-default btn-md pull-right" ng-click="cancelCreating()">Cancel</button>
+                    </form>
+
+                    -->
+
+                    <!--- Editing a bookmark -->
+                    
+                    <div ng-if="showEditing()">
+                        
+                        <h4>Editing {{editedBookmark.title}}</h4>
+
+                        <form class="create-form" role="form" ng-submit="updateBookmark(editedBookmark)" novalidate>
+                        <div class="form-group">
+                            <label>Bookmark Title</label>
+                            <input type="text" class="form-control" ng-model="editedBookmark.title" placeholder="Enter title"></input>
+                        </div> 
+
+                        <div class="form-group">
+                            <label>Bookmark URL</label>
+                            <input type="text" class="form-control" ng-model="editedBookmark.URL" placeholder="Enter URL"></input>
+                        </div>
+                        <button type="submit" class="btn btn-info btn-md">Save</button>
+                        <button type="button" class="btn btn-default btn-md pull-right" ng-click="cancelEditing()">Cancel</button>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.6.1/lodash.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script src="myApp.js"></script>
+    </body>
+</html>
